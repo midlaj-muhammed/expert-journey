@@ -1,0 +1,50 @@
+JOHN SMITH
+Data Analyst
+johnsmith@email.com | (555) 123-4567 | linkedin.com/in/johnsmith | github.com/johnsmith
+
+SUMMARY
+Analytical and detail-oriented Data Analyst with 2 years of experience in data analysis, visualization, and reporting. Skilled in SQL, Python, and Excel with a passion for transforming complex data into actionable insights.
+
+SKILLS
+Technical: Python, SQL, Excel, Tableau, pandas, NumPy
+Soft Skills: Problem-solving, Communication, Teamwork, Attention to detail
+
+EXPERIENCE
+
+Junior Data Analyst
+ABC Analytics | June 2021 - Present
+- Analyze customer behavior data to identify trends and patterns using SQL and Python
+- Create weekly and monthly reports using Tableau dashboards for executive team
+- Collaborate with marketing team to optimize campaign performance based on data insights
+- Automate data cleaning processes, reducing processing time by 30%
+- Assist in developing KPIs to track business performance
+
+Data Analysis Intern
+XYZ Corporation | January 2021 - May 2021
+- Supported senior analysts in data collection and preprocessing
+- Conducted exploratory data analysis on customer datasets
+- Created visualizations to present findings to stakeholders
+- Developed Excel macros to streamline reporting processes
+
+EDUCATION
+
+Bachelor of Science in Statistics
+University of Data Science | 2017 - 2021
+- GPA: 3.7/4.0
+- Relevant Coursework: Statistical Methods, Data Mining, Database Management, Programming for Data Science
+
+PROJECTS
+
+Customer Segmentation Analysis
+- Analyzed customer purchase data to identify distinct customer segments
+- Implemented K-means clustering algorithm in Python
+- Created interactive dashboard to visualize segments and their characteristics
+
+Sales Prediction Model
+- Developed a time series forecasting model to predict monthly sales
+- Achieved 85% accuracy using ARIMA models
+- Presented findings and recommendations to management team
+
+CERTIFICATIONS
+- Microsoft Excel Expert Certification (2022)
+- SQL for Data Analysis - Udacity (2021)

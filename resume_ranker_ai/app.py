@@ -4,6 +4,18 @@ import tempfile
 import sys
 import subprocess
 
+# Check if we should redirect to root-level app
+def check_redirect():
+    """Check if we should redirect to the root-level app."""
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(current_dir)
+    root_app = os.path.join(parent_dir, 'app.py')
+
+    # If we're in a subdirectory and root app exists, show redirect message
+    if os.path.exists(root_app) and os.path.basename(current_dir) == 'resume_ranker_ai':
+        st.info("🔄 **Note**: This app should be run from the root directory for optimal compatibility.")
+        st.info("If you're experiencing issues, please use the root-level app.py file.")
+
 # Setup Python path for imports
 def setup_imports():
     """Setup imports with multiple fallback methods."""
@@ -47,6 +59,9 @@ def setup_imports():
 
 # Import the classes
 DocumentParser, NLPAnalyzer, ResumeRecommender = setup_imports()
+
+# Check for redirect (show info but continue)
+check_redirect()
 
 # Ensure spaCy model is installed before proceeding
 def ensure_spacy_model():
