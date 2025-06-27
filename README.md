@@ -5,6 +5,14 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![spaCy](https://img.shields.io/badge/spaCy-3.4%2B-orange.svg)](https://spacy.io/)
 
+## 🌐 Live Demo
+
+**🚀 [Try Expert Journey Live](https://resume-ranker-ai.streamlit.app/)**
+
+Experience the power of AI-driven resume optimization in your browser - no installation required!
+
+---
+
 An intelligent AI-powered tool that helps job seekers optimize their resumes for specific job descriptions using advanced Natural Language Processing (NLP) and machine learning techniques.
 
 ## 🎯 Project Overview
