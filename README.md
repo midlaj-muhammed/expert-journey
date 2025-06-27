@@ -55,7 +55,7 @@ Perfect for job seekers, career coaches, and HR professionals looking to streaml
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/expert-journey.git
+   git clone https://github.com/midlaj-muhammed/expert-journey.git
    cd expert-journey
    ```
 
@@ -211,13 +211,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 📧 **Email**: [your-email@example.com]
-- 🐛 **Issues**: [GitHub Issues](https://github.com/yourusername/expert-journey/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/yourusername/expert-journey/discussions)
+- 📧 **Email**: [midlajvalappil@gmail.com]
+- 🐛 **Issues**: [GitHub Issues](https://github.com/midlaj-muhammed/expert-journey/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/midlaj-muhammed/expert-journey/discussions)
 
 ---
 
 **Made with ❤️ for job seekers worldwide**
 
 *Star ⭐ this repository if you find it helpful!*
-# expert-journey
+
