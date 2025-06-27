@@ -1,9 +1,25 @@
 import streamlit as st
 import os
 import tempfile
+import sys
+import subprocess
 from utils.document_parser import DocumentParser
 from utils.nlp_analyzer import NLPAnalyzer
 from utils.recommender import ResumeRecommender
+
+# Ensure spaCy model is installed before proceeding
+def ensure_spacy_model():
+    """Ensure spaCy model is available before starting the app."""
+    try:
+        # Try to run the installation script
+        script_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "install_spacy_model.py")
+        if os.path.exists(script_path):
+            subprocess.run([sys.executable, script_path], check=False, capture_output=True)
+    except Exception as e:
+        print(f"Warning: Could not run spaCy installation script: {e}")
+
+# Run spaCy model check
+ensure_spacy_model()
 
 # Set page configuration
 st.set_page_config(
@@ -15,19 +31,52 @@ st.set_page_config(
 # Initialize NLP components
 @st.cache_resource
 def load_nlp_components():
-    with st.spinner("Loading AI models... This may take a moment on first run."):
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+
+    try:
+        status_text.text("🔄 Initializing AI components...")
+        progress_bar.progress(25)
+
+        status_text.text("📥 Loading NLP models (this may take a moment on first run)...")
+        progress_bar.progress(50)
+
         nlp_analyzer = NLPAnalyzer()
+        progress_bar.progress(75)
+
+        status_text.text("🤖 Setting up recommendation engine...")
         recommender = ResumeRecommender(nlp_analyzer)
+        progress_bar.progress(100)
+
+        if nlp_analyzer.nlp:
+            status_text.text("✅ All AI components loaded successfully!")
+        else:
+            status_text.text("⚠️ Running in basic mode - some features may be limited")
+
+        # Clear progress indicators after a short delay
+        import time
+        time.sleep(1)
+        progress_bar.empty()
+        status_text.empty()
+
         return nlp_analyzer, recommender
+
+    except Exception as e:
+        progress_bar.empty()
+        status_text.empty()
+        raise e
 
 # Load components with error handling
 try:
     nlp_analyzer, recommender = load_nlp_components()
+
+    # Only show warning if spaCy model is not available
     if not nlp_analyzer.nlp:
-        st.warning("⚠️ Running in basic mode. Some advanced NLP features may be limited. For full functionality, ensure spaCy models are installed.")
+        st.info("ℹ️ **Note**: Running in basic mode. The app is fully functional, but some advanced NLP features are simplified. To enable full functionality, spaCy models need to be installed.")
+
 except Exception as e:
-    st.error(f"Error loading AI components: {str(e)}")
-    st.info("Please check that all dependencies are properly installed.")
+    st.error(f"❌ Error loading AI components: {str(e)}")
+    st.info("Please refresh the page or contact support if the issue persists.")
     st.stop()
 
 # Sample job descriptions
