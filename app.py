@@ -42,12 +42,38 @@ except ImportError:
 def ensure_spacy_model():
     """Ensure spaCy model is available before starting the app."""
     try:
-        # Try to run the installation script
-        script_path = os.path.join(current_dir, "install_spacy_model.py")
-        if os.path.exists(script_path):
-            subprocess.run([sys.executable, script_path], check=False, capture_output=True)
+        # First try to import spacy and test if model exists
+        import spacy
+        try:
+            nlp = spacy.load("en_core_web_sm")
+            print("✅ spaCy model already available")
+            return True
+        except OSError:
+            print("📥 Installing spaCy model...")
+
+        # Try multiple installation methods
+        installation_methods = [
+            [sys.executable, "-m", "spacy", "download", "en_core_web_sm"],
+            [sys.executable, "-m", "pip", "install", "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl"],
+            [sys.executable, "-c", "import spacy; spacy.cli.download('en_core_web_sm')"]
+        ]
+
+        for method in installation_methods:
+            try:
+                result = subprocess.run(method, check=False, capture_output=True, timeout=300)
+                if result.returncode == 0:
+                    print(f"✅ spaCy model installed successfully using method: {' '.join(method[:3])}")
+                    return True
+            except Exception as e:
+                print(f"⚠️ Installation method failed: {e}")
+                continue
+
+        print("⚠️ Could not install spaCy model, will run in basic mode")
+        return False
+
     except Exception as e:
-        print(f"Warning: Could not run spaCy installation script: {e}")
+        print(f"⚠️ spaCy installation error: {e}")
+        return False
 
 # Run spaCy model check
 ensure_spacy_model()

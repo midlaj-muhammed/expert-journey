@@ -1,14 +1,6 @@
 streamlit>=1.15.0
-# Install spaCy components
 spacy>=3.4.0
-# Try to install spaCy model directly
-https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
-# Use pre-built wheels when possible
-wheel
-setuptools
-# Document processing
 PyPDF2>=2.10.0
 python-docx>=0.8.11
 pdfplumber>=0.7.0
-# ML components
 scikit-learn>=1.0.2
