@@ -3,9 +3,50 @@ import os
 import tempfile
 import sys
 import subprocess
-from utils.document_parser import DocumentParser
-from utils.nlp_analyzer import NLPAnalyzer
-from utils.recommender import ResumeRecommender
+
+# Setup Python path for imports
+def setup_imports():
+    """Setup imports with multiple fallback methods."""
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(current_dir)
+    utils_dir = os.path.join(current_dir, 'utils')
+
+    # Add directories to Python path
+    for path in [current_dir, parent_dir, utils_dir]:
+        if path not in sys.path:
+            sys.path.insert(0, path)
+
+    # Try multiple import strategies
+    try:
+        # Strategy 1: Relative imports
+        from utils.document_parser import DocumentParser
+        from utils.nlp_analyzer import NLPAnalyzer
+        from utils.recommender import ResumeRecommender
+        return DocumentParser, NLPAnalyzer, ResumeRecommender
+    except ImportError:
+        try:
+            # Strategy 2: Direct imports
+            import document_parser
+            import nlp_analyzer
+            import recommender
+            return document_parser.DocumentParser, nlp_analyzer.NLPAnalyzer, recommender.ResumeRecommender
+        except ImportError:
+            try:
+                # Strategy 3: Absolute imports from utils
+                sys.path.insert(0, os.path.join(current_dir, 'utils'))
+                from document_parser import DocumentParser
+                from nlp_analyzer import NLPAnalyzer
+                from recommender import ResumeRecommender
+                return DocumentParser, NLPAnalyzer, ResumeRecommender
+            except ImportError as e:
+                st.error(f"❌ Failed to import required modules: {e}")
+                st.error(f"Current directory: {current_dir}")
+                st.error(f"Python path: {sys.path[:3]}...")
+                st.info("Please check that all utility modules are in the correct location.")
+                st.stop()
+
+# Import the classes
+DocumentParser, NLPAnalyzer, ResumeRecommender = setup_imports()
 
 # Ensure spaCy model is installed before proceeding
 def ensure_spacy_model():
