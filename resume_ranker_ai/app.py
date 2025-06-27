@@ -15,11 +15,20 @@ st.set_page_config(
 # Initialize NLP components
 @st.cache_resource
 def load_nlp_components():
-    nlp_analyzer = NLPAnalyzer()
-    recommender = ResumeRecommender(nlp_analyzer)
-    return nlp_analyzer, recommender
+    with st.spinner("Loading AI models... This may take a moment on first run."):
+        nlp_analyzer = NLPAnalyzer()
+        recommender = ResumeRecommender(nlp_analyzer)
+        return nlp_analyzer, recommender
 
-nlp_analyzer, recommender = load_nlp_components()
+# Load components with error handling
+try:
+    nlp_analyzer, recommender = load_nlp_components()
+    if not nlp_analyzer.nlp:
+        st.warning("⚠️ Running in basic mode. Some advanced NLP features may be limited. For full functionality, ensure spaCy models are installed.")
+except Exception as e:
+    st.error(f"Error loading AI components: {str(e)}")
+    st.info("Please check that all dependencies are properly installed.")
+    st.stop()
 
 # Sample job descriptions
 SAMPLE_JOBS = {
