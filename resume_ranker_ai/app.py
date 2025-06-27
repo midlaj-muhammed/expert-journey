@@ -1,81 +1,9 @@
 import streamlit as st
 import os
 import tempfile
-import sys
-import subprocess
-
-# Check if we should redirect to root-level app
-def check_redirect():
-    """Check if we should redirect to the root-level app."""
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    parent_dir = os.path.dirname(current_dir)
-    root_app = os.path.join(parent_dir, 'app.py')
-
-    # If we're in a subdirectory and root app exists, show redirect message
-    if os.path.exists(root_app) and os.path.basename(current_dir) == 'resume_ranker_ai':
-        st.info("🔄 **Note**: This app should be run from the root directory for optimal compatibility.")
-        st.info("If you're experiencing issues, please use the root-level app.py file.")
-
-# Setup Python path for imports
-def setup_imports():
-    """Setup imports with multiple fallback methods."""
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    parent_dir = os.path.dirname(current_dir)
-    utils_dir = os.path.join(current_dir, 'utils')
-
-    # Add directories to Python path
-    for path in [current_dir, parent_dir, utils_dir]:
-        if path not in sys.path:
-            sys.path.insert(0, path)
-
-    # Try multiple import strategies
-    try:
-        # Strategy 1: Relative imports
-        from utils.document_parser import DocumentParser
-        from utils.nlp_analyzer import NLPAnalyzer
-        from utils.recommender import ResumeRecommender
-        return DocumentParser, NLPAnalyzer, ResumeRecommender
-    except ImportError:
-        try:
-            # Strategy 2: Direct imports
-            import document_parser
-            import nlp_analyzer
-            import recommender
-            return document_parser.DocumentParser, nlp_analyzer.NLPAnalyzer, recommender.ResumeRecommender
-        except ImportError:
-            try:
-                # Strategy 3: Absolute imports from utils
-                sys.path.insert(0, os.path.join(current_dir, 'utils'))
-                from document_parser import DocumentParser
-                from nlp_analyzer import NLPAnalyzer
-                from recommender import ResumeRecommender
-                return DocumentParser, NLPAnalyzer, ResumeRecommender
-            except ImportError as e:
-                st.error(f"❌ Failed to import required modules: {e}")
-                st.error(f"Current directory: {current_dir}")
-                st.error(f"Python path: {sys.path[:3]}...")
-                st.info("Please check that all utility modules are in the correct location.")
-                st.stop()
-
-# Import the classes
-DocumentParser, NLPAnalyzer, ResumeRecommender = setup_imports()
-
-# Check for redirect (show info but continue)
-check_redirect()
-
-# Ensure spaCy model is installed before proceeding
-def ensure_spacy_model():
-    """Ensure spaCy model is available before starting the app."""
-    try:
-        # Try to run the installation script
-        script_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "install_spacy_model.py")
-        if os.path.exists(script_path):
-            subprocess.run([sys.executable, script_path], check=False, capture_output=True)
-    except Exception as e:
-        print(f"Warning: Could not run spaCy installation script: {e}")
-
-# Run spaCy model check
-ensure_spacy_model()
+from utils.document_parser import DocumentParser
+from utils.nlp_analyzer import NLPAnalyzer
+from utils.recommender import ResumeRecommender
 
 # Set page configuration
 st.set_page_config(
@@ -87,52 +15,19 @@ st.set_page_config(
 # Initialize NLP components
 @st.cache_resource
 def load_nlp_components():
-    progress_bar = st.progress(0)
-    status_text = st.empty()
-
-    try:
-        status_text.text("🔄 Initializing AI components...")
-        progress_bar.progress(25)
-
-        status_text.text("📥 Loading NLP models (this may take a moment on first run)...")
-        progress_bar.progress(50)
-
+    with st.spinner("Loading AI models... This may take a moment on first run."):
         nlp_analyzer = NLPAnalyzer()
-        progress_bar.progress(75)
-
-        status_text.text("🤖 Setting up recommendation engine...")
         recommender = ResumeRecommender(nlp_analyzer)
-        progress_bar.progress(100)
-
-        if nlp_analyzer.nlp:
-            status_text.text("✅ All AI components loaded successfully!")
-        else:
-            status_text.text("⚠️ Running in basic mode - some features may be limited")
-
-        # Clear progress indicators after a short delay
-        import time
-        time.sleep(1)
-        progress_bar.empty()
-        status_text.empty()
-
         return nlp_analyzer, recommender
-
-    except Exception as e:
-        progress_bar.empty()
-        status_text.empty()
-        raise e
 
 # Load components with error handling
 try:
     nlp_analyzer, recommender = load_nlp_components()
-
-    # Only show warning if spaCy model is not available
     if not nlp_analyzer.nlp:
-        st.info("ℹ️ **Note**: Running in basic mode. The app is fully functional, but some advanced NLP features are simplified. To enable full functionality, spaCy models need to be installed.")
-
+        st.warning("⚠️ Running in basic mode. Some advanced NLP features may be limited. For full functionality, ensure spaCy models are installed.")
 except Exception as e:
-    st.error(f"❌ Error loading AI components: {str(e)}")
-    st.info("Please refresh the page or contact support if the issue persists.")
+    st.error(f"Error loading AI components: {str(e)}")
+    st.info("Please check that all dependencies are properly installed.")
     st.stop()
 
 # Sample job descriptions

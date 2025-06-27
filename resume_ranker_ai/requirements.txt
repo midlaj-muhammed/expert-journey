@@ -1,8 +1,6 @@
 streamlit>=1.15.0
-# Install spaCy components
+# Install spaCy components separately
 spacy>=3.4.0
-# Try to install spaCy model directly
-https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
 # Use pre-built wheels when possible
 wheel
 setuptools

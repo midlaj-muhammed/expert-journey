@@ -27,76 +27,29 @@ class NLPAnalyzer:
             }
 
     def _load_spacy_model(self):
-        """Load spaCy model with automatic download and fallback options."""
+        """Load spaCy model with fallback options."""
         models_to_try = ["en_core_web_md", "en_core_web_sm", "en_core_web_lg"]
 
-        # First, try to load existing models
         for model_name in models_to_try:
             try:
                 nlp = spacy.load(model_name)
-                print(f"✅ Successfully loaded spaCy model: {model_name}")
+                print(f"Successfully loaded spaCy model: {model_name}")
                 return nlp
             except OSError:
-                print(f"⚠️ Model {model_name} not found, trying next...")
+                print(f"Model {model_name} not found, trying next...")
                 continue
 
-        # If no models are available, try to download them
-        models_to_download = ["en_core_web_sm", "en_core_web_md"]
-
-        for model_name in models_to_download:
-            try:
-                print(f"📥 No spaCy models found. Downloading {model_name}...")
-
-                # Try different download methods
-                download_success = False
-
-                # Method 1: Using spacy download command
-                try:
-                    subprocess.check_call([
-                        sys.executable, "-m", "spacy", "download", model_name
-                    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                    download_success = True
-                except:
-                    pass
-
-                # Method 2: Using pip install if spacy download fails
-                if not download_success:
-                    try:
-                        subprocess.check_call([
-                            sys.executable, "-m", "pip", "install", f"https://github.com/explosion/spacy-models/releases/download/{model_name}-3.7.1/{model_name}-3.7.1-py3-none-any.whl"
-                        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                        download_success = True
-                    except:
-                        pass
-
-                # Method 3: Direct pip install
-                if not download_success:
-                    try:
-                        subprocess.check_call([
-                            sys.executable, "-m", "pip", "install", model_name
-                        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                        download_success = True
-                    except:
-                        pass
-
-                if download_success:
-                    try:
-                        nlp = spacy.load(model_name)
-                        print(f"✅ Successfully downloaded and loaded {model_name}")
-                        return nlp
-                    except:
-                        print(f"❌ Downloaded {model_name} but failed to load")
-                        continue
-                else:
-                    print(f"❌ Failed to download {model_name}")
-                    continue
-
-            except Exception as e:
-                print(f"❌ Error downloading {model_name}: {e}")
-                continue
-
-        print("⚠️ All download attempts failed. Running in fallback mode without spaCy NLP features")
-        return None
+        # If no models are available, try to download en_core_web_sm
+        try:
+            print("No spaCy models found. Attempting to download en_core_web_sm...")
+            subprocess.check_call([sys.executable, "-m", "spacy", "download", "en_core_web_sm"])
+            nlp = spacy.load("en_core_web_sm")
+            print("Successfully downloaded and loaded en_core_web_sm")
+            return nlp
+        except Exception as e:
+            print(f"Failed to download spaCy model: {e}")
+            print("Running in fallback mode without spaCy NLP features")
+            return None
     
     def preprocess_text(self, text):
         """Clean and preprocess text."""
