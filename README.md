@@ -7,9 +7,11 @@
 
 ## 🌐 Live Demo
 
-**🚀 [Try Expert Journey Live](https://resume-ranker-ai.streamlit.app/)**
+**🚀 [Try Expert Journey on Hugging Face Spaces](https://huggingface.co/spaces/midlajvalappil/Resume-Ranker-AI)**
 
-Experience the power of AI-driven resume optimization in your browser - no installation required!
+**🔗 [Alternative Demo on Streamlit Cloud](https://resume-ranker-ai.streamlit.app/)**
+
+Experience the power of AI-driven resume optimization in your browser - no installation required! Choose either platform for the best experience.
 
 ---
 
